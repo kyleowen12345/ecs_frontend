@@ -23,12 +23,11 @@ const ConnectionView = ({ connectionId }) => {
   return (
      <div
       style={{
-        width,
-        backgroundColor: primary,
-        borderRadius: borderRadius,
+        backgroundColor: "#3E84F6",
+        borderRadius: 8,
         overflow: "hidden",
-        margin: borderRadius,
-        padding: borderRadius,
+        margin: 8,
+        padding: 8,
         display: "flex",
         flex: 1,
         flexDirection: "column",
