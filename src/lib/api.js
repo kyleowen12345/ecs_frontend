@@ -1,15 +1,19 @@
 import axios from 'axios'
 const API_AUTH_URL = process.env.REACT_APP_SERVER_URL;
 
-export const getToken = async () => {
+export const getToken = async (creator) => {
     if(!API_AUTH_URL){
       console.error("Error: Provide only ONE PARAMETER - either Token or Auth API");
     }else if(API_AUTH_URL){
-      const res = await fetch(`${API_AUTH_URL}/get-token`, {
-        method: "GET",
+      const res = await axios({
+        url:`${API_AUTH_URL}/get-token`,
+        method: "post",
+        data:{
+          creator:creator
+        }
       });
-      const { token } = await res.json();
-      return token;
+      
+      return res.data.token;
     }else{
       console.error("Error: ", Error("Please add a token or Auth Server URL"));
     }

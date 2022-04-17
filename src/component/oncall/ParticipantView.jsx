@@ -12,9 +12,13 @@ const ParticipantView = ({ participantId }) => {
     const webcamRef = useRef(null);
     const micRef = useRef(null);
     const screenShareRef = useRef(null);
-  
-    const onStreamEnabled = (stream) => {};
-    const onStreamDisabled = (stream) => {};
+    console.log(participantId)
+    const onStreamEnabled = (stream) => {
+      console.log('onStreamEnabled',stream)
+    };
+    const onStreamDisabled = (stream) => {
+      console.log('onStreamDisabled',stream)
+    };
 
     const {
         displayName,
@@ -156,6 +160,7 @@ const ParticipantView = ({ participantId }) => {
             >
               WEB CAM
             </p>
+            
           </div>
 
           <div
@@ -174,26 +179,27 @@ const ParticipantView = ({ participantId }) => {
                 }
               }
               onClick={async () => {
-                const meetingId = prompt(
-                  `Please enter meeting id where you want to switch ${displayName}`
-                );
-                const token = await getToken();
-                if (meetingId && token) {
-                  try {
-                    await switchTo({
-                      meetingId,
-                      payload: "Im Switching",
-                      token: token,
-                    });
-                  } catch (e) {
-                    console.log("swithc To Error", e);
-                  }
-                } else {
-                  alert("Empty meetingId!");
-                }
+                console.log(participantId)
+                disableMic()
               }}
             >
-              Switch Participant
+              disableMic
+            </button>
+            <button
+              className="button blue"
+              style={
+                {
+                  // height: 50,
+                  // width: 200,
+                }
+              }
+              onClick={() => 
+                
+                enableMic()
+                
+              }
+            >
+              enableMic
             </button>
           </div>
         </div>

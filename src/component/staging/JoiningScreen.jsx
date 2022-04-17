@@ -1,28 +1,30 @@
 import React, { useEffect, useRef, useState } from "react";
-import {InputGroup, Input, InputLeftAddon, InputRightAddon,  Box, Button,Grid, GridItem, Text,Tooltip   } from '@chakra-ui/react'
+import { useNavigate   } from "react-router-dom";
+import {InputGroup, Input, InputLeftAddon, InputRightAddon,  Box, Button,Grid, GridItem, Text,Tooltip,Image,Icon,VStack   } from '@chakra-ui/react'
 import { createMeeting, getToken, validateMeeting } from "../../lib/api";
 import MeetingDetailsScreen from "./MeetingDetailsScreen";
 import { useVideoCall } from "../../lib/callContext";
+import Cookies from 'js-cookie'
+import { BsFillMicFill,BsFillMicMuteFill,BsCameraVideoFill,BsCameraVideoOffFill } from 'react-icons/bs';
+import {IoMdArrowRoundBack} from 'react-icons/io'
+import nocam from '../../assets/images/nocam.png'
 
 
-const JoiningScreen = ({ 
-    onClickStartMeeting,
-}) => {
+
+const JoiningScreen = ({ onClickStartMeeting}) => {
+  const navigate = useNavigate();
   const {
           token,
-          setToken,
           meetingId,
-          setMeetingId,
           participantName, 
           setParticipantName,
           micOn, 
           setMicOn,
           webcamOn, 
-          setWebcamOn,
-          isMeetingStarted, 
-          setMeetingStarted
+          setWebcamOn, 
+          setMeetingStarted,
+          readyToJoin,
         } = useVideoCall()
-  const [readyToJoin, setReadyToJoin] = useState(false);
   const videoPlayerRef = useRef();
   const [videoTrack, setVideoTrack] = useState(null);
 
@@ -72,32 +74,7 @@ const getVideo = async () => {
     }
 };
 
-// onClickJoin
-const onClickJoin = async (id) => {
-  console.log('onClickJoin')
-  const token = await getToken();
-  const valid = await validateMeeting({ meetingId: id, token });
-  if (valid) {
-    setReadyToJoin(true);
-    setToken(token);
-    setMeetingId(id);
-    setWebcamOn(true);
-    setMicOn(true);
-  } else alert("Invalid Meeting Id");
-}
 
-// onClickCreateMeeting
-const onClickCreateMeeting = async () => {
-  console.log('onClickCreateMeeting')
-  const token = await getToken();
-  const _meetingId = await createMeeting({token,region:"sg001"});
-  setToken(token);
-  setMeetingId(_meetingId);
-  setReadyToJoin(true);
-  setWebcamOn(true);
-  setMicOn(true);
-  console.log(_meetingId)
-}
 
 useEffect(() => {
   if (webcamOn && !videoTrack) {
@@ -105,148 +82,183 @@ useEffect(() => {
   }
 }, [webcamOn,videoTrack]);
 
+// submit Participant name
+const submitParticipantName = (name) => {
+   setParticipantName(name)
+   Cookies.set('perps',name)
+}
 
+console.log(token)
    
   return (
-     <Box>
-        {readyToJoin && 
-            <Box>
+     <VStack
+      maxW={"100%"}
+      spacing={10}
+      padding={5}
+     >
+        
+         {/* back button */}
+            <Box
+              width={"100%"}
+              
+            >
               <Button
+                  backgroundColor={"black"}
+                  _hover={{backgroundColor:"black"}}
+                  padding={0}
                   onClick={() => {
-                  setReadyToJoin(false);
-                  videoPlayerRef.current.pause()
+                  navigate('/');
+                  _handleToggleWebcam()
+                  
                   }}>
-                  back
+                  <Icon as={IoMdArrowRoundBack} h={8} w={8} color={"brand.100"}/>
               </Button>
             </Box>
-        }
-        <Grid templateColumns='repeat(5, 1fr)' gap={6}>
-        {readyToJoin ? (
-          <Box
-            m={6}
-            style={{
-              display: "flex",
-              flex: 1,
-              width: "100%",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              // padding: padding,
-            }}
+        
+          
+              {/* Video box */}
+            <Box 
+             width={"100%"}
+             maxW={"1000px"}
+             position="relative"
+             display={"flex"}
+             justifyContent="center"
+             alignItems={"center"}
             >
-            <Box >
-              <video
-                autoPlay
-                playsInline
-                muted
-                ref={videoPlayerRef}
-                controls={false}
-                // className={styles.video + " flip"}
-              />
 
-              {!webcamOn && 
+                <Box 
+                  width={"100%"}
+                  height="500px"
+                  borderRadius={"20px"}
+                >
+                      {
+                      !webcamOn ?
+                        <Box
+                          height={"100%"}
+                          display="flex"
+                          justifyContent={"center"}
+                          alignItems="center"
+                        >
+                            <Image 
+                              objectFit={"contain"} 
+                              src={nocam}
+                            />
+                        </Box> 
+                          :
+                        <video
+                          autoPlay
+                          playsInline
+                          muted
+                          ref={videoPlayerRef}
+                          controls={false}
+                          style={{
+                            height:"100%",
+                            width:"100%",
+                            borderRadius:"10px",
+                            objectFit:"cover"
+                            
+                          }}
+                        />
+
+                      }
+              
                 <Box
-                  position="absolute"
-                  style={{
-                    top: 0,
-                    bottom: 0,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    right: 0,
-                    left: 0,
-                  }}
+                  bottom= "16px"
+                  position= "absolute"
+                  display={"flex"}
+                  justifyContent="center"
+                  width={"100%"}
                   >
-                  <Text>Camera is Turned Off</Text>
+                    <Box
+                      width={"130px"}
+                      display={"flex"}
+                      justifyContent="space-between"
+
+                    >
+                        <Box
+                          maxW={"100px"}
+                        >
+                          <Tooltip
+                            label={micOn ? "Turn off mic" : "Turn on mic"}
+                            placement="top">
+                            <Button
+                              onClick={_handleToggleMic}
+                              backgroundColor={"white"}
+                              borderRadius="full"
+                              _hover={{
+                                backgroundColor:"brand.100"
+                              }}
+                              >
+                              {micOn ? <Icon w={6} h={6}  as={BsFillMicMuteFill} /> : <Icon w={6} h={6} as={BsFillMicFill}/> }
+                            </Button>
+                          </Tooltip>
+                        </Box>
+
+                        <Box
+                        maxW={"100px"}
+                        >
+                          <Tooltip
+                            label={webcamOn ? "Turn off camera" : "Turn on camera"}
+                            placement="top">
+                            <Button
+                              onClick={_handleToggleWebcam}
+                              backgroundColor={"white"}
+                              borderRadius="full"
+                              _hover={{
+                                backgroundColor:"brand.100"
+                              }}
+                              >
+                              {webcamOn ? <Icon w={6} h={6} as={BsCameraVideoOffFill}/> : <Icon w={6} h={6} as={BsCameraVideoFill}/>}
+                            </Button>
+                          </Tooltip>
+                        </Box>
+                    </Box>
+                    
                 </Box>
-               }
 
-              <Box
-                position="absolute"
-                // bottom={theme.spacing(2)}
-                left="0"
-                right="0">
-                <Grid
-                  alignItems="center"
-                  justify="center"
-                  spacing={2}>
-
-                  <GridItem>
-                    <Tooltip
-                      label={micOn ? "Turn off mic" : "Turn on mic"}
-                      placement="top">
-                      <Button
-                        onClick={() => _handleToggleMic()}
-                        variant="contained"
-                        style={
-                          micOn
-                            ? {}
-                            : {
-                                backgroundColor: "red",
-                                color: "white",
-                              }
-                        }
-                        >
-                        {micOn ? <Text>On</Text> : <Text>Off</Text> }
-                      </Button>
-                    </Tooltip>
-                  </GridItem>
-
-                  <GridItem>
-                    <Tooltip
-                      label={webcamOn ? "Turn off camera" : "Turn on camera"}
-                      placement="top">
-                      <Button
-                        onClick={() => _handleToggleWebcam()}
-                        variant="contained"
-                        style={
-                          webcamOn
-                            ? {}
-                            : {
-                                backgroundColor: "red",
-                                color: "white",
-                              }
-                        }
-                        >
-                        {webcamOn ? <Text>CamOn</Text> : <Text>CamOff</Text>}
-                      </Button>
-                    </Tooltip>
-                  </GridItem>
-
-                </Grid>
-
-              </Box>
+                </Box>
             </Box>
-            <InputGroup >
-                <InputLeftAddon children='Name'  />
-                <Input placeholder='mysite' onChange={(e) => {setParticipantName(e.target.value);}}/>
+
+
+            <InputGroup 
+              maxW={"1000px"}
+            >
+                <InputLeftAddon 
+                  children='Username'  
+                  bg={"brand.100"}
+                  color="white"
+                  _hover={{color:"brand.100", bg:"white"}}
+                />
+                <Input placeholder='Enter your name here...' onChange={(e) => {submitParticipantName(e.target.value)}}/>
                 <InputRightAddon 
-                children={<Button
-                      disabled={participantName.length < 3}
-                      color="primary"
-                      variant="contained"
-                      onClick={(e) => {
-                        if (videoTrack) {
-                          videoTrack.stop();
-                          setVideoTrack(null);
-                        }
-                        setMeetingStarted(true)
-                      }}
-                      id={"btnJoin"}>
+                  bg={"brand.100"}
+                  color="white"
+                  _hover={{bg:"brand.100", color:"white"}} 
+                  children={<Button
+                        disabled={participantName.length < 3}
+                        bg={"brand.100"}
+                        color="white"
+                        borderY={"1px solid white"}
+                        borderRadius={0}
+                        _active={{bg:"brand.100", color:"white"}}
+                        _hover={{bg:"brand.100", color:"white"}}
+                        onClick={(e) => {
+                          if (videoTrack) {
+                            videoTrack.stop();
+                            setVideoTrack(null);
+                          }
+                          setMeetingStarted(true)
+                          navigate(`/meeting/${meetingId}`)
+                        }}
+                        id={"btnJoin"}>
                       Start
                     </Button>} 
                 />
             </InputGroup>
             
-          </Box>
-        ) : (
-          <MeetingDetailsScreen
-            onClickJoin={onClickJoin}
-            onClickCreateMeeting={onClickCreateMeeting}
-          />
-        )}
-        </Grid>
-     </Box>
+          
+
+     </VStack>
 
   )
 

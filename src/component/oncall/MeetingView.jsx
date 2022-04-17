@@ -1,12 +1,19 @@
 import { useMeeting } from "@videosdk.live/react-sdk";
 import React, { useEffect, useRef, useState } from "react";
+import {useParams,useNavigate} from "react-router-dom";
 import ExternalVideo from "./ExternalVideo";
 import ParticipantsView from "./ParticipantsView";
 import ConnectionsView from "./ConnectionsView";
 import MeetingChat from "./MeetingChat";
+import { validateMeeting } from "../../lib/api";
+import { useVideoCall } from "../../lib/callContext";
+import BottomMenu from "./menu/BottomMenu";
 
 
 const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
+        const {meetingID} = useParams()
+        const {token} = useVideoCall()
+        const navigate = useNavigate();
   
         const [participantViewVisible, setParticipantViewVisible] = useState(true);
       
@@ -25,8 +32,14 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
         function onMainParticipantChanged(participant) {
           console.log(" onMainParticipantChanged", participant);
         }
-        function onEntryRequested(participantId, name) {
-          console.log(" onEntryRequested", participantId, name);
+        function onEntryRequested({participantId, name,allow,deny}) {
+          console.log(" onEntryRequested x", participantId);
+          console.log(name)
+
+         const userperm= prompt(`do you want ${name} to join`,'yes')
+
+         userperm == "yes" ? allow():deny()
+
         }
         function onEntryResponded(participantId, name) {
           console.log(" onEntryResponded", participantId, name);
@@ -66,6 +79,8 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
         };
         const onMicRequested = (data) => {
           console.log("onMicRequested", data);
+          const {accept} = data
+          accept()
         };
         const onPinStateChanged = (data) => {
           console.log("onPinStateChanged", data);
@@ -93,7 +108,7 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
         const onConnectionOpen = (data) => {
           console.log("onConnectionOpen", data);
         };
-      
+    
         const {
           meetingId,
           meeting,
@@ -114,7 +129,8 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
           leave,
           connectTo,
           end,
-          //
+        
+          // 
           startRecording,
           stopRecording,
           //
@@ -167,7 +183,7 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
           onSwitchMeeting,
           onConnectionOpen,
         });
-      
+       
         const handlestartVideo = () => {
           console.log("handlestartVideo");
       
@@ -206,6 +222,32 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
           meeting?.startRecording()
           stopRecording();
         };
+
+        const handleJoinConference = async() => {
+           try {
+             console.log(meetingID)
+            const valid = await validateMeeting({meetingId:meetingID,token:token})
+            console.log(valid)
+             if(valid){
+               return join()
+             }else{
+               alert('token or meetingId is invalid')
+             }
+           } catch (error) {
+             console.log(error)
+           }
+           
+        }
+
+        const getOut = async() => {
+          try {
+            leave()
+            navigate('/')
+          } catch (error) {
+            console.log(error)
+          }
+         
+        }
       
         const tollbarHeight = 120;
       
@@ -214,12 +256,22 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
             style={{
               display: "flex",
               flexDirection: "column",
-              backgroundColor: "#D6E9FE",
+              color: "white",
             }}
           >
             <div style={{ height: tollbarHeight }}>
-              <button className={"button red"} onClick={leave}>
+              {/* <BottomMenu/> */}
+              <button className={"button red"} onClick={getOut}>
                 LEAVE
+              </button>
+              <button className={"button blue"} onClick={handleJoinConference}>
+                join
+              </button>
+              <button className={"button blue"} onClick={()=>end()}>
+                end
+              </button>
+              <button className={"button blue"} onClick={()=>muteMic()}>
+                Mute mic
               </button>
               <button className={"button blue"} onClick={toggleMic}>
                 toggleMic

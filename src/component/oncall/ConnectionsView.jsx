@@ -11,8 +11,9 @@ import { useVideoCall } from '../../lib/callContext';
 import ConnectionView from './ConnectionView'
 
 const ConnectionsView = () => {
-  const { connections, meetingId } = useMeeting();
+  const { connections, meetingId,mainParticipant } = useMeeting();
   const {chunk} = useVideoCall()
+  console.log(mainParticipant)
   return (
     <div
       style={{

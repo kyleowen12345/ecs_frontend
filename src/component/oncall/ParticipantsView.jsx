@@ -24,7 +24,7 @@ const ParticipantsView = () => {
   >
     <Text>Participants</Text>
     {chunk([...participants.keys()]).map((k) => (
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex" }} key={k}>
         {k.map((l) => (
           <ParticipantView key={l} participantId={l} />
         ))}

@@ -1,56 +1,95 @@
 import React, { useState } from "react";
-import {InputGroup, Input, InputLeftAddon, InputRightAddon,  Box, Button,Grid, GridItem, Text,Tooltip   } from '@chakra-ui/react'
+import {InputGroup, Input, InputLeftAddon, InputRightAddon,  Box, Button, Text,useToast, VStack, Image  } from '@chakra-ui/react'
+import { useVideoCall } from "../../lib/callContext";
+
 
 const MeetingDetailsScreen = ({ 
     onClickJoin,
     onClickCreateMeeting,
 }) => {
+  const {  
+    createMeetingLoad,
+    joinMeetingLoad,
+   } = useVideoCall()
+  const toast = useToast()
   const [meetingId, setMeetingId] =useState("");
-  const [meetingIdError, setMeetingIdError] = useState(false);
 
   return (
-        <Box
-          m={6}
-          style={{
-            display: "flex",
-            flex: 1,
-            width: "100%",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            // padding: padding,
-          }}>
+        <Box 
+           height={"90vh"} 
+           display="flex"
+           justifyContent={"center"}
+           alignItems="center"
+           >
+              
+                <VStack
+                    maxH={"400px"}
+                    spacing='24px'
+                    paddingX={"10px"}
+                    width="700px"
+                >
+                    <Button
+                      bg={"brand.100"}
+                      color="white"
+                      _hover={{color:"brand.100", bg:"white"}}
+                      width={"70%"}
+                      maxW="200px"
+                      fontWeight="normal"
+                      isLoading={createMeetingLoad}
+                      loadingText='Creating..'
+                      onClick={onClickCreateMeeting}>
+                      Create Meeting
+                    </Button>
 
-            <Button
-              style={{
-                  marginBottom:"1rem"
-              }}
-              // color="primary"
-              // variant="contained"
-              onClick={onClickCreateMeeting}>
-              Create Meeting
-            </Button>
+                    <Text 
+                    color="white"
+                    >OR</Text>
 
-            <Text >OR</Text>
-
-            <InputGroup >
-                  <InputLeftAddon children='Name'  />
-                  <Input placeholder='mysite' onChange={(e) => {setMeetingId(e.target.value);}}/>
-                  <InputRightAddon 
-                  children={ <Button
-                      disabled={!meetingId.match("\\w{4}\\-\\w{4}\\-\\w{4}")}
-                      color="primary"
-                      variant="contained"
-                      onClick={(e) => {
-                        if (meetingId.match("\\w{4}\\-\\w{4}\\-\\w{4}"))
-                          onClickJoin(meetingId);
-                        else setMeetingIdError(true);
-                      }}
-                      id={"btnJoin"}>
-                      Join
-                    </Button>} 
-                  />
-            </InputGroup>
+                    <InputGroup 
+                      width={"100%"}
+                    >
+                          <InputLeftAddon 
+                            children='Meeting ID'  
+                            bg={"brand.100"}
+                            color="white"
+                            _hover={{color:"brand.100", bg:"white"}}
+                          />
+                          <Input 
+                            placeholder='Enter meeting ID here..' 
+                            onChange={(e) => {setMeetingId(e.target.value);}}
+                          />
+                          <InputRightAddon
+                            bg={"brand.100"}
+                            color="white"
+                            _hover={{bg:"brand.100", color:"white"}} 
+                            children={ <Button
+                              disabled={!meetingId.match("\\w{4}\\-\\w{4}\\-\\w{4}")}
+                              bg={"brand.100"}
+                              color="white"
+                              borderY={"1px solid white"}
+                              borderRadius={0}
+                              _active={{bg:"brand.100", color:"white"}}
+                              isLoading={joinMeetingLoad}
+                              _hover={{bg:"brand.100", color:"white"}} 
+                              onClick={(e) => {
+                                if (meetingId.match("\\w{4}\\-\\w{4}\\-\\w{4}"))
+                                  onClickJoin(meetingId);
+                                else toast({
+                                  title: 'Meeting ID is incorrect',
+                                  description: "We've created your account for you.",
+                                  status: 'error',
+                                  duration: 3000,
+                                  isClosable: true,
+                                  position:"top"
+                                })
+                              }}
+                              id={"btnJoin"}>
+                              Join
+                            </Button>} 
+                          />
+                    </InputGroup>
+                </VStack>
+            
         </Box>
   )
 }

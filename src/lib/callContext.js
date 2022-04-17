@@ -1,4 +1,6 @@
 import React,{useState,useContext,createContext, useEffect} from 'react'
+import { getToken,createMeeting,validateMeeting } from './api'
+import Cookies from 'js-cookie'
 
 const vidoeCallContext = createContext()
 
@@ -18,6 +20,14 @@ const useProvideVideoCall = () =>{
     const [micOn, setMicOn] = useState(false);
     const [webcamOn, setWebcamOn] = useState(false);
     const [isMeetingStarted, setMeetingStarted] = useState(false);
+    const [readyToJoin, setReadyToJoin] = useState(false);
+
+    // Loaders
+    const [createMeetingLoad,setCreateMeetingLoad] = useState(false)
+    const [joinMeetingLoad,setJoinMeetingLoad] = useState(false)
+    // const [createMeetingLoad,setCreateMeetingLoad] = useState(false)
+    // const [createMeetingLoad,setCreateMeetingLoad] = useState(false)
+    const myCookie = Cookies.get('validation')
 
     const chunk = (arr) => {
         const newArr = [];
@@ -36,6 +46,16 @@ const useProvideVideoCall = () =>{
         return strTime;
       }
 
+    useEffect(() => {
+       if(myCookie){
+        return setToken(myCookie)
+       } 
+    }, [myCookie])
+
+    console.log(token)
+      
+
+
     return {
         token,
         setToken,
@@ -49,6 +69,12 @@ const useProvideVideoCall = () =>{
         setWebcamOn,
         isMeetingStarted,
         setMeetingStarted,
+        readyToJoin,
+        setReadyToJoin,
+        createMeetingLoad,
+        setCreateMeetingLoad,
+        joinMeetingLoad,
+        setJoinMeetingLoad,
         chunk,
         formatAMPM 
 
