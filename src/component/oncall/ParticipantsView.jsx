@@ -13,6 +13,7 @@ import ParticipantView from './ParticipantView'
 const ParticipantsView = () => {
   const { participants } = useMeeting();
   const {chunk} = useVideoCall()
+  console.log(participants)
   return (
     <div
     style={{

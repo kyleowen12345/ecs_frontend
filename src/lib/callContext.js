@@ -1,6 +1,7 @@
 import React,{useState,useContext,createContext, useEffect} from 'react'
 import { getToken,createMeeting,validateMeeting } from './api'
 import Cookies from 'js-cookie'
+import { useNavigate } from 'react-router-dom'
 
 const vidoeCallContext = createContext()
 
@@ -14,6 +15,7 @@ export const useVideoCall = () => {
 }
 
 const useProvideVideoCall = () =>{
+    // const navigate = useNavigate()
     const [token, setToken] = useState("");
     const [meetingId, setMeetingId] = useState("");
     const [participantName, setParticipantName] = useState("");
@@ -27,6 +29,11 @@ const useProvideVideoCall = () =>{
     const [joinMeetingLoad,setJoinMeetingLoad] = useState(false)
     // const [createMeetingLoad,setCreateMeetingLoad] = useState(false)
     // const [createMeetingLoad,setCreateMeetingLoad] = useState(false)
+
+    // Chat
+    const [messageAlert,setMessageAlert] = useState(false)
+  
+
     const myCookie = Cookies.get('validation')
 
     const chunk = (arr) => {
@@ -75,8 +82,10 @@ const useProvideVideoCall = () =>{
         setCreateMeetingLoad,
         joinMeetingLoad,
         setJoinMeetingLoad,
+        messageAlert,
+        setMessageAlert,
         chunk,
-        formatAMPM 
-
+        formatAMPM, 
+        
     }
 }

@@ -4,7 +4,7 @@ import {useParams,useNavigate} from "react-router-dom";
 import ExternalVideo from "./ExternalVideo";
 import ParticipantsView from "./ParticipantsView";
 import ConnectionsView from "./ConnectionsView";
-import MeetingChat from "./MeetingChat";
+// import MeetingChat fro./modals/messagecomponents/MeetingChathat";
 import { validateMeeting } from "../../lib/api";
 import { useVideoCall } from "../../lib/callContext";
 import BottomMenu from "./menu/BottomMenu";
@@ -183,7 +183,6 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
           onSwitchMeeting,
           onConnectionOpen,
         });
-       
         const handlestartVideo = () => {
           console.log("handlestartVideo");
       
@@ -259,8 +258,8 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
               color: "white",
             }}
           >
-            <div style={{ height: tollbarHeight }}>
-              {/* <BottomMenu/> */}
+            {/* <div style={{ height: tollbarHeight }}>
+              
               <button className={"button red"} onClick={getOut}>
                 LEAVE
               </button>
@@ -339,7 +338,8 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
               >
                 Make Connections
               </button>
-            </div>
+            </div> */}
+            
             <h1>Meeting id is : {meetingId}</h1>
             <div style={{ display: "flex", flex: 1 }}>
               <div
@@ -354,14 +354,16 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
               >
                 
                 <ExternalVideo />
+                {/* <ConnectionsView /> */}
                 {/* <ParticipantsView /> */}
                 {participantViewVisible ? <ParticipantsView /> : <ConnectionsView />}
               </div>
-              <MeetingChat tollbarHeight={tollbarHeight} />
+              {/* <MeetingChat tollbarHeight={tollbarHeight} /> */}
             </div>
+            <BottomMenu />
           </div>
        
   )
 }
 
-export default MeetingView
+export default MeetingView 

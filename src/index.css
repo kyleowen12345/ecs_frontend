@@ -11,3 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.drawer-translate-y-0 {
+   transform: translateY(0) !important;
+   transition-delay: 50ms !important;
+   transition-duration: 400ms !important;
+}
+
+.drawer-translate-y-8\/10 {
+  transform: translateY(65%) !important;
+  transition-delay: 50ms !important;
+  transition-duration: 400ms !important;
+}
+

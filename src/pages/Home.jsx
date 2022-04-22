@@ -48,6 +48,7 @@ const Home = () => {
         isClosable: true,
         position:"top"
       })
+      setJoinMeetingLoad(false)
     }
     
   }
@@ -75,6 +76,7 @@ const Home = () => {
         isClosable: true,
         position:"top"
       })
+      setCreateMeetingLoad(false)
     }
     
   }

@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { VideoCallProvider } from './lib/callContext';
 import { ChakraProvider } from '@chakra-ui/react';
 import {Global,css} from '@emotion/react'
 import '@fontsource/poppins';
@@ -29,13 +28,13 @@ const GlobalStyle = ({ children }) => {
 
 ReactDOM.render(
   <React.StrictMode>
-      <VideoCallProvider>
+     
         <ChakraProvider theme={theme} colorScheme={'brand'}>
           <GlobalStyle>
             <App />
           </GlobalStyle> 
         </ChakraProvider> 
-      </VideoCallProvider>
+   
   </React.StrictMode>,
   document.getElementById('root')
 );

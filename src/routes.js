@@ -6,7 +6,7 @@ import CreateMeeting from "./pages/CreateMeeting";
 import Home from "./pages/Home";
 import JoinMeeting from "./pages/JoinMeeting";
 import Meeting from "./pages/Meeting";
-import { useVideoCall } from "./lib/callContext";
+import { useVideoCall, VideoCallProvider } from "./lib/callContext";
 
 // const ProtectedRoutes = ({children}) =>{
 //     return (
@@ -38,6 +38,7 @@ export default function AppRoutes() {
             <Helmet>
                 <title>ECS (Video Conferencing App)</title>
             </Helmet>
+            <VideoCallProvider>
             <BrowserRouter>
                 <Routes>
                     <Route 
@@ -57,8 +58,9 @@ export default function AppRoutes() {
                         path='/meeting/:meetingID'
                         element={<Meeting/>}
                     />
-                </Routes>
+                </Routes>  
             </BrowserRouter>
+            </VideoCallProvider>
         </>
     )
 }
