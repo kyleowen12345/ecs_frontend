@@ -44,9 +44,7 @@ const MeetingChat = ({tollbarHeight}) => {
           width={"100%"}
          >
             <Input
-              style={{
-                color:"black"
-              }}
+              color="white"
               value={message}
               onChange={(e) => {
                 const v = e.target.value;

@@ -44,6 +44,7 @@ const MessageList = ({messages}) => {
           paddingY={2}
           color="white"
           borderRadius={10}
+          marginTop={5}
         >
           <Box 
              display={"flex"}

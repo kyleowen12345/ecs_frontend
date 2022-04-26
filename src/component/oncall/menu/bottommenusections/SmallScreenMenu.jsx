@@ -67,7 +67,7 @@ const SmallScreenMenu = ({
            
             <VideoQuality/>
 
-            <MenuIcons  icon={BsUiChecksGrid} label={"View" }/>
+            <MenuIcons  icon={BsUiChecksGrid} label={"Layout" }/>
       </Grid>
      </Box>
   )

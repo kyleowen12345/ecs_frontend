@@ -32,13 +32,20 @@ const useProvideVideoCall = () =>{
 
     // Chat
     const [messageAlert,setMessageAlert] = useState(false)
+
+    // User Entry Permission
+    const [entryRequestLoading,setEntryRequestLoading] = useState(false)
+    const [entryRequest,setEntryRequest] = useState("")
+
+    //  To view paticipant conditional
+    const [participantViewVisible, setParticipantViewVisible] = useState(true);
   
 
     const myCookie = Cookies.get('validation')
 
     const chunk = (arr) => {
         const newArr = [];
-        while (arr.length) newArr.push(arr.splice(0, 3));
+        while (arr.length) newArr.push(arr.splice(0, 1));
         return newArr;
       };
 
@@ -84,8 +91,15 @@ const useProvideVideoCall = () =>{
         setJoinMeetingLoad,
         messageAlert,
         setMessageAlert,
+        entryRequestLoading,
+        setEntryRequestLoading,
+        entryRequest,
+        setEntryRequest,
+        participantViewVisible,
+        setParticipantViewVisible,
         chunk,
         formatAMPM, 
+        myCookie
         
     }
 }

@@ -27,7 +27,7 @@ const SecondMenuSection = ({screenShareOn,isRecording,toggleScreenShare,handleSt
            
             <VideoQuality/>
 
-            <MenuIcons  icon={BsUiChecksGrid} label={"View" }/>
+            <MenuIcons  icon={BsUiChecksGrid} label={"Layout" }/>
       </Box>
   )
 }

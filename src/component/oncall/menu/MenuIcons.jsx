@@ -19,7 +19,7 @@ const MenuIcons = ({icon,label,method,withBadge,badgeCount,badgeAlert}) => {
            height={"23px"}
         > 
           {
-            badgeCount &&
+            badgeCount != 0 &&
             <Badge size="sm" bg="red" color="white" position="absolute" top="-10px" right="-10px" borderRadius="50%">{badgeCount}</Badge> 
             
           }

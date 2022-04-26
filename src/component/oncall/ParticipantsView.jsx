@@ -9,11 +9,12 @@ import {
 import { Text  } from '@chakra-ui/react'
 import { useVideoCall } from '../../lib/callContext';
 import ParticipantView from './ParticipantView'
+import { Grid,Box } from '@chakra-ui/react'
 
 const ParticipantsView = () => {
   const { participants } = useMeeting();
   const {chunk} = useVideoCall()
-  console.log(participants)
+  console.log(participants.keys())
   return (
     <div
     style={{
@@ -24,13 +25,17 @@ const ParticipantsView = () => {
     }}
   >
     <Text>Participants</Text>
+    <Grid 
+      templateColumns={['repeat(2, 1fr)','repeat(2, 1fr)' ,'repeat(2, 1fr)','repeat(3, 1fr)','repeat(3, 1fr)','repeat(4, 1fr)'  ]}
+    >
     {chunk([...participants.keys()]).map((k) => (
-      <div style={{ display: "flex" }} key={k}>
+      <Box key={k}>
         {k.map((l) => (
           <ParticipantView key={l} participantId={l} />
         ))}
-      </div>
+      </Box>
     ))}
+    </Grid>
   </div>
   )
 }

@@ -156,8 +156,8 @@ const leaveMeeting = () => {
        
          <ThirdMenuSection 
          decoded={decoded} 
-         endMeeting={endMeeting} 
-         leaveMeeting={leaveMeeting}
+         endMeeting={end} 
+         leaveMeeting={leave}
          />
          
       </Box>
@@ -170,8 +170,8 @@ const leaveMeeting = () => {
       toggleMic={toggleMic}
       toggleWebcam={toggleWebcam}
       decoded={decoded}
-      endMeeting={endMeeting}
-      leaveMeeting={leaveMeeting}
+      endMeeting={end}
+      leaveMeeting={leave}
       screenShareOn={screenShareOn}
       isRecording={isRecording}
       toggleScreenShare={toggleScreenShare}

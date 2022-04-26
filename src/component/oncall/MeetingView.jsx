@@ -8,14 +8,26 @@ import ConnectionsView from "./ConnectionsView";
 import { validateMeeting } from "../../lib/api";
 import { useVideoCall } from "../../lib/callContext";
 import BottomMenu from "./menu/BottomMenu";
+import Cookies from 'js-cookie'
+import jwt_decode from "jwt-decode";
+import {  Box, Text,Icon,Badge, Button   } from '@chakra-ui/react'
 
 
 const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
         const {meetingID} = useParams()
-        const {token} = useVideoCall()
+        const {
+          token,
+          entryRequestLoading,
+          setEntryRequestLoading,
+          entryRequest,
+          setEntryRequest,
+          participantViewVisible,
+          setParticipantViewVisible,
+          myCookie
+        } = useVideoCall()
         const navigate = useNavigate();
   
-        const [participantViewVisible, setParticipantViewVisible] = useState(true);
+       
       
         function onParticipantJoined(participant) {
           console.log(" onParticipantJoined", participant);
@@ -33,12 +45,15 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
           console.log(" onMainParticipantChanged", participant);
         }
         function onEntryRequested({participantId, name,allow,deny}) {
+          
           console.log(" onEntryRequested x", participantId);
           console.log(name)
 
          const userperm= prompt(`do you want ${name} to join`,'yes')
 
+          
          userperm == "yes" ? allow():deny()
+        
 
         }
         function onEntryResponded(participantId, name) {
@@ -223,13 +238,16 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
         };
 
         const handleJoinConference = async() => {
+         
            try {
-             console.log(meetingID)
-            const valid = await validateMeeting({meetingId:meetingID,token:token})
+            
+            const valid = await validateMeeting({meetingId:meetingID,token:token? token:  myCookie})
             console.log(valid)
              if(valid){
+              
                return join()
              }else{
+              
                alert('token or meetingId is invalid')
              }
            } catch (error) {
@@ -247,9 +265,9 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
           }
          
         }
-      
+        const decoded = jwt_decode(token ? token : Cookies.get('validation'))
         const tollbarHeight = 120;
-      
+        console.log(participants.size === 0 )
         return (
           <div
             style={{
@@ -340,7 +358,14 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
               </button>
             </div> */}
             
-            <h1>Meeting id is : {meetingId}</h1>
+            <Text>Meeting id is : {meetingId || meetingID}</Text>
+            { participants.size === 0 && !decoded?.permissions.includes('allow_join') && 
+            <Button
+            maxW={"300px"}
+            bg={"brand.100"}
+            color="white"
+            _hover={{color:"brand.100", bg:"white"}}
+            onClick={handleJoinConference}>Join</Button>}
             <div style={{ display: "flex", flex: 1 }}>
               <div
                 style={{
@@ -360,7 +385,7 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
               </div>
               {/* <MeetingChat tollbarHeight={tollbarHeight} /> */}
             </div>
-            <BottomMenu />
+           {participants.size > 0 && <BottomMenu />}
           </div>
        
   )

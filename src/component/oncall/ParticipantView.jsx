@@ -7,11 +7,18 @@ import {
     usePubSub,
   } from "@videosdk.live/react-sdk";
 import { getToken } from "../../lib/api";
+import { Grid,Box,Icon, Text,Image } from '@chakra-ui/react'
+import {GoPrimitiveDot} from 'react-icons/go'
+import Cookies from 'js-cookie'
+import jwt_decode from "jwt-decode";
+import nocam from '../../assets/images/nocam.png'
+import { BsFillMicFill,BsFillMicMuteFill,BsCameraVideoFill,BsCameraVideoOffFill} from 'react-icons/bs';
 
 const ParticipantView = ({ participantId }) => {
     const webcamRef = useRef(null);
     const micRef = useRef(null);
     const screenShareRef = useRef(null);
+    const decoded = jwt_decode(Cookies.get('validation'))
     console.log(participantId)
     const onStreamEnabled = (stream) => {
       console.log('onStreamEnabled',stream)
@@ -100,38 +107,44 @@ const ParticipantView = ({ participantId }) => {
         }
       }, [screenShareStream, screenShareOn]);
   return (
-    <div
-      style={{
-        backgroundColor: "#3E84F6",
-        borderRadius: 8,
-        overflow: "hidden",
-        margin: 8,
-        padding: 8,
-        display: "flex",
-        flex: 1,
-        flexDirection: "column",
-        position: "relative",
-      }}
+    <Box
+     bg={"brand.100"}
+     borderRadius={8}
+     overflow="hidden"
+     margin={1}
+     padding={1}
+     display={"flex"}
+     flex={1}
+     flexDirection={"column"}
+     position="relative"
+     maxW={"450px"}
+    //  border={"1px solid"}
+    //  borderColor={"brand.100"}
     >
       <audio ref={micRef} autoPlay muted={isLocal} />
 
-      <div
-        style={{
-          position: "relative",
-          borderRadius: 8,
-          overflow: "hidden",
-          backgroundColor: "pink",
-          width: "100%",
-          height: 300,
-        }}
+      <Box
+        position={"relative"}
+        borderRadius={8}
+        overflow="hidden"
+        width={"100%"}
+        h={"300px"}
       >
-        <div
-          style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
+        <Box
+           height={"100%"}
+           width={"100%"}
+           position={"absolute"}
+           top={0}
+           left={0}
+           right={0}
+           bottom={0}
+          // style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
         >
+         { webcamOn ?
           <video
             height={"100%"}
             width={"100%"}
-            ref={webcamRef}
+            ref={screenShareOn ? screenShareRef : webcamRef}
             style={{
               backgroundColor: "black",
               position: "absolute",
@@ -140,37 +153,43 @@ const ParticipantView = ({ participantId }) => {
               right: 0,
               bottom: 0,
               objectFit: "contain",
+              minHeight:"300px"
             }}
             autoPlay
           />
-          <div
-            style={{
-              position: "absolute",
-              top: 8,
-              right: 8,
-            }}
+          :
+          <Image 
+            objectFit={"contain"} 
+            src={nocam}
+            height={"100%"}
+            width={"100%"}
+            bg="black"
+          />}
+          <Box
+           position={"absolute"}
+           top={2}
+           right={2}
           >
-            <p
-              style={{
-                color: webcamOn ? "green" : "red",
-                fontSize: 16,
-                fontWeight: "bold",
-                opacity: 1,
-              }}
-            >
-              WEB CAM
-            </p>
-            
-          </div>
-
-          <div
-            style={{
-              position: "absolute",
-              top: 10,
-              left: 10,
-            }}
+            <Icon w={6} h={6} color={webcamOn ? "green" : "red"} as={GoPrimitiveDot} />
+          </Box>
+          
+        
+           <Box
+            position={"absolute"}
+            bottom={2}
+            left={2}
+            bg={"black"}
+            p={1}
+            borderRadius={8}
           >
-            <button
+            {/* <Icon w={5} h={5} color={"brand.100"} as={BsFillMicFill} />
+            <Icon w={5} h={5} color={"brand.100"} as={BsCameraVideoFill} /> */}
+            <Text
+             fontSize={"12px"}
+             maxW={"200px"}
+             isTruncated
+            >{displayName}</Text>
+            {/* <button
               className="button blue"
               style={
                 {
@@ -200,12 +219,14 @@ const ParticipantView = ({ participantId }) => {
               }
             >
               enableMic
-            </button>
-          </div>
-        </div>
-      </div>
+            </button> */}
 
-      <div
+          </Box>
+
+        </Box>
+      </Box>
+
+      {/* <Box
         style={{
           marginTop: 8,
           position: "relative",
@@ -253,8 +274,8 @@ const ParticipantView = ({ participantId }) => {
             </p>
           </div>
         </div>
-      </div>
-      <table>
+      </Box> */}
+      {/* <table>
         {[
           { k: "Name", v: displayName },
           { k: "webcamOn", v: webcamOn ? "YES" : "NO" },
@@ -273,8 +294,8 @@ const ParticipantView = ({ participantId }) => {
             </td>
           </tr>
         ))}
-      </table>
-    </div>
+      </table> */}
+    </Box>
   )
 }
 
