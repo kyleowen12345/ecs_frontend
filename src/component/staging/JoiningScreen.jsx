@@ -128,7 +128,7 @@ console.log(token)
 
                 <Box 
                   width={"100%"}
-                  height="500px"
+                  height={["300px","350px","400px","500px"]}
                   borderRadius={"20px"}
                 >
                       {
@@ -248,7 +248,7 @@ console.log(token)
                             setVideoTrack(null);
                           }
                           setMeetingStarted(true)
-                          navigate(`/meeting/${meetingId}`)
+                          navigate(`/meeting/${meetingId}/1`)
                         }}
                         id={"btnJoin"}>
                       Start

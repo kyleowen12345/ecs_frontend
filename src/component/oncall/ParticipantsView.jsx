@@ -24,7 +24,7 @@ const ParticipantsView = () => {
       padding: 8,
     }}
   >
-    <Text>Participants</Text>
+    {/* <Text>Participants</Text> */}
     <Grid 
       templateColumns={['repeat(2, 1fr)','repeat(2, 1fr)' ,'repeat(2, 1fr)','repeat(3, 1fr)','repeat(3, 1fr)','repeat(4, 1fr)'  ]}
     >

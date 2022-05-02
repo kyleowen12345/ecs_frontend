@@ -55,7 +55,7 @@ export default function AppRoutes() {
                     />
 
                     <Route 
-                        path='/meeting/:meetingID'
+                        path='/meeting/:meetingID/:page'
                         element={<Meeting/>}
                     />
                 </Routes>  

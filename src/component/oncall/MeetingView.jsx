@@ -1,6 +1,6 @@
 import { useMeeting } from "@videosdk.live/react-sdk";
 import React, { useEffect, useRef, useState } from "react";
-import {useParams,useNavigate} from "react-router-dom";
+import {useParams,useNavigate,useLocation,useSearchParams } from "react-router-dom";
 import ExternalVideo from "./ExternalVideo";
 import ParticipantsView from "./ParticipantsView";
 import ConnectionsView from "./ConnectionsView";
@@ -11,10 +11,20 @@ import BottomMenu from "./menu/BottomMenu";
 import Cookies from 'js-cookie'
 import jwt_decode from "jwt-decode";
 import {  Box, Text,Icon,Badge, Button   } from '@chakra-ui/react'
+import Pagination from "./Pagination";
+import Navbar from "../header/Navbar";
+// import {
+//   useParams,
+//   useLocation,
+//   useHistory,
+//   useRouteMatch,
+// } from "react-router-dom";
 
 
 const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
         const {meetingID} = useParams()
+        // const [searchParams, setSearchParams] = useSearchParams();
+        let location = useLocation();
         const {
           token,
           entryRequestLoading,
@@ -26,7 +36,9 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
           myCookie
         } = useVideoCall()
         const navigate = useNavigate();
-  
+        console.log(meetingID)
+        // console.log(location.search)
+       
        
       
         function onParticipantJoined(participant) {
@@ -46,19 +58,17 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
         }
         function onEntryRequested({participantId, name,allow,deny}) {
           
-          console.log(" onEntryRequested x", participantId);
-          console.log(name)
-
+          // console.log(" onEntryRequested x", participantId);
+          // console.log(name)
+          setEntryRequest(participantId)
          const userperm= prompt(`do you want ${name} to join`,'yes')
 
           
          userperm == "yes" ? allow():deny()
         
-
+        //  setEntryRequestLoading(false)
         }
-        function onEntryResponded(participantId, name) {
-          console.log(" onEntryResponded", participantId, name);
-        }
+        
         function onRecordingStarted() {
           console.log(" onRecordingStarted");
         }
@@ -198,6 +208,12 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
           onSwitchMeeting,
           onConnectionOpen,
         });
+        console.log(entryRequest)
+        function onEntryResponded(participantId, name) {
+          console.log(" onEntryResponded", participantId, name);
+          console.log(participants)
+          if(name === "denied") return alert(`Request rejected`)
+        }
         const handlestartVideo = () => {
           console.log("handlestartVideo");
       
@@ -238,20 +254,22 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
         };
 
         const handleJoinConference = async() => {
-         
+          setEntryRequestLoading(true)
            try {
             
             const valid = await validateMeeting({meetingId:meetingID,token:token? token:  myCookie})
             console.log(valid)
              if(valid){
               
-               return join()
+                join()
+                setEntryRequestLoading(false)
              }else{
-              
+              setEntryRequestLoading(false)
                alert('token or meetingId is invalid')
              }
            } catch (error) {
              console.log(error)
+             setEntryRequestLoading(false)
            }
            
         }
@@ -269,12 +287,11 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
         const tollbarHeight = 120;
         console.log(participants.size === 0 )
         return (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              color: "white",
-            }}
+          <Box
+            display={"flex"}
+            flexDirection="column"
+            justifyContent={"center"}
+            color="white"
           >
             {/* <div style={{ height: tollbarHeight }}>
               
@@ -358,35 +375,71 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
               </button>
             </div> */}
             
-            <Text>Meeting id is : {meetingId || meetingID}</Text>
-            { participants.size === 0 && !decoded?.permissions.includes('allow_join') && 
-            <Button
-            maxW={"300px"}
-            bg={"brand.100"}
-            color="white"
-            _hover={{color:"brand.100", bg:"white"}}
-            onClick={handleJoinConference}>Join</Button>}
-            <div style={{ display: "flex", flex: 1 }}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  position: "relative",
-                  flex: 1,
-                  overflowY: "scroll",
-                  height: `calc(100vh - ${tollbarHeight}px)`,
-                }}
-              >
+            {/* <Text>Meeting id is : {meetingId || meetingID}</Text> */}
+            <Navbar/>
+           
+                <Box 
+                 display={"flex"}
+                 flex={1}
+                >
+                    <Box
+                      display={"flex"}
+                      flexDirection={"column"}
+                      position={"relative"}
+                      flex={1}
+                      pl={2}
+                      overflowY="scroll"
+                      // height={120}
+                      css={{
+                        '&::-webkit-scrollbar': {
+                          width: '8px',
+                        },
+                        '&::-webkit-scrollbar-track': {
+                          width: '8px',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                          background: "gray",
+                          borderRadius: '24px',
+                        },
+                      }}
+                    >
                 
-                <ExternalVideo />
-                {/* <ConnectionsView /> */}
-                {/* <ParticipantsView /> */}
-                {participantViewVisible ? <ParticipantsView /> : <ConnectionsView />}
-              </div>
+                      <ExternalVideo />
+                      {/* <ConnectionsView /> */}
+                      {/* <ParticipantsView /> */}
+                      {participantViewVisible ? <ParticipantsView /> : <ConnectionsView />}
+                      {/* <Pagination marginPages={1} pageRange={2} initialPage={0} pageCount={Math.ceil(participants.size / 4)}/>    */}
+                    </Box>
               {/* <MeetingChat tollbarHeight={tollbarHeight} /> */}
-            </div>
+              
+              
+            </Box>
+            { participants.size === 0 && !decoded?.permissions.includes('allow_join') && 
+              <Box
+                width={"100%"}
+                height="100%"
+                display={"flex"}
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                mt={10}
+              >
+                 
+                  <Button
+                      w={"300px"}
+                      bg={"brand.100"}
+                      color="white"
+                      _hover={{color:"brand.100", bg:"white"}}
+                      onClick={handleJoinConference}
+                      isLoading={entryRequestLoading}
+                  >
+                      Request to join
+                  </Button>
+                  <Text  mt={5}>Meeting id is : {meetingId || meetingID}</Text>
+              </Box>          
+            }
            {participants.size > 0 && <BottomMenu />}
-          </div>
+          </Box>
        
   )
 }

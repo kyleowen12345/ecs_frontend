@@ -128,7 +128,8 @@ const ParticipantView = ({ participantId }) => {
         borderRadius={8}
         overflow="hidden"
         width={"100%"}
-        h={"300px"}
+        minH={["200px","200px","200px","300px"]}
+        maxH={"300px"}
       >
         <Box
            height={"100%"}
@@ -153,7 +154,7 @@ const ParticipantView = ({ participantId }) => {
               right: 0,
               bottom: 0,
               objectFit: "contain",
-              minHeight:"300px"
+              minHeight:"100%"
             }}
             autoPlay
           />
@@ -173,6 +174,38 @@ const ParticipantView = ({ participantId }) => {
             <Icon w={6} h={6} color={webcamOn ? "green" : "red"} as={GoPrimitiveDot} />
           </Box>
           
+          {
+            decoded?.permissions.includes('allow_join') && 
+            <Box
+              position={"absolute"}
+              top={2}
+              left={2}
+            >
+              <Icon 
+                cursor={"pointer"} 
+                onClick={async () => {
+                console.log(participantId)
+                micOn ? disableMic() : enableMic()
+                }} 
+                w={4} 
+                h={4} 
+                mr={2}
+                as={micOn ? BsFillMicMuteFill:BsFillMicFill}
+              />
+              <Icon 
+                cursor={"pointer"} 
+                onClick={async () => {
+                console.log(participantId)
+                webcamOn ? disableWebcam() : enableWebcam()
+                }} 
+                w={4} 
+                h={4} 
+                as={webcamOn ? BsCameraVideoOffFill : BsCameraVideoFill}
+              />
+
+      
+           </Box>
+          }
         
            <Box
             position={"absolute"}
@@ -189,37 +222,7 @@ const ParticipantView = ({ participantId }) => {
              maxW={"200px"}
              isTruncated
             >{displayName}</Text>
-            {/* <button
-              className="button blue"
-              style={
-                {
-                  // height: 50,
-                  // width: 200,
-                }
-              }
-              onClick={async () => {
-                console.log(participantId)
-                disableMic()
-              }}
-            >
-              disableMic
-            </button>
-            <button
-              className="button blue"
-              style={
-                {
-                  // height: 50,
-                  // width: 200,
-                }
-              }
-              onClick={() => 
-                
-                enableMic()
-                
-              }
-            >
-              enableMic
-            </button> */}
+            
 
           </Box>
 

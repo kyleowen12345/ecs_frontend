@@ -87,7 +87,7 @@ const decoded = jwt_decode(token ? token : Cookies.get('validation'))
 
 const endMeeting = () => {
      end()
-    //  navigate('/')
+     navigate('/')
 }
 const leaveMeeting = () => {
      leave()
@@ -156,7 +156,7 @@ const leaveMeeting = () => {
        
          <ThirdMenuSection 
          decoded={decoded} 
-         endMeeting={end} 
+         endMeeting={endMeeting} 
          leaveMeeting={leave}
          />
          
@@ -170,7 +170,7 @@ const leaveMeeting = () => {
       toggleMic={toggleMic}
       toggleWebcam={toggleWebcam}
       decoded={decoded}
-      endMeeting={end}
+      endMeeting={endMeeting}
       leaveMeeting={leave}
       screenShareOn={screenShareOn}
       isRecording={isRecording}
