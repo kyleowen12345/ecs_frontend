@@ -229,7 +229,7 @@ console.log(token)
                   color="white"
                   _hover={{color:"brand.100", bg:"white"}}
                 />
-                <Input placeholder='Enter your name here...' onChange={(e) => {submitParticipantName(e.target.value)}}/>
+                <Input placeholder='Enter your name here...' onChange={(e) => {submitParticipantName(e.target.value)}} color="white"/>
                 <InputRightAddon 
                   bg={"brand.100"}
                   color="white"

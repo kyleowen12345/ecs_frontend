@@ -36,7 +36,7 @@ const MessageList = ({messages}) => {
 
       return (
         <Box
-          width={"45%"}
+          width={["100%","100%","55%","45%"]}
           bg={localParticipant?.displayName === senderName ? "blue": "green" }
           marginLeft={localParticipant?.displayName !== senderName && "auto"}
           key={i}

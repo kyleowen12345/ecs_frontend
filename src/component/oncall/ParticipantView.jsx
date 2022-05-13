@@ -108,7 +108,7 @@ const ParticipantView = ({ participantId }) => {
       }, [screenShareStream, screenShareOn]);
   return (
     <Box
-     bg={"brand.100"}
+     bg={micOn ? "#95C730":"brand.100" }
      borderRadius={8}
      overflow="hidden"
      margin={1}

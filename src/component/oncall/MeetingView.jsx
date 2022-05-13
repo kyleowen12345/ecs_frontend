@@ -10,9 +10,10 @@ import { useVideoCall } from "../../lib/callContext";
 import BottomMenu from "./menu/BottomMenu";
 import Cookies from 'js-cookie'
 import jwt_decode from "jwt-decode";
-import {  Box, Text,Icon,Badge, Button   } from '@chakra-ui/react'
+import {  Box, Text,Icon,Badge, Button,useToast   } from '@chakra-ui/react'
 import Pagination from "./Pagination";
 import Navbar from "../header/Navbar";
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 // import {
 //   useParams,
 //   useLocation,
@@ -23,6 +24,7 @@ import Navbar from "../header/Navbar";
 
 const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
         const {meetingID} = useParams()
+        const toast = useToast()
         // const [searchParams, setSearchParams] = useSearchParams();
         let location = useLocation();
         const {
@@ -377,6 +379,27 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
             
             {/* <Text>Meeting id is : {meetingId || meetingID}</Text> */}
             <Navbar/>
+            {decoded?.permissions.includes('allow_join') && 
+            <CopyToClipboard text={meetingId || meetingID}
+            onCopy={()=> {
+              toast({
+                title: 'Meeting Id copied.',
+                description: "You can share that meeting ID",
+                status: 'success',
+                duration: 3000,
+                isClosable: true,
+                position:"top"
+              })
+            }}
+          >
+          <Button 
+             maxW={"150px"} 
+             bg={"brand.100"} 
+             ml={5}
+             _hover={{
+               bg:"brand.100"
+             }}>Copy Meeting ID</Button>
+        </CopyToClipboard>}
            
                 <Box 
                  display={"flex"}

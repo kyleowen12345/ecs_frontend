@@ -47,6 +47,7 @@ const MeetingDetailsScreen = ({
 
                     <InputGroup 
                       width={"100%"}
+                      maxW="500px"
                     >
                           <InputLeftAddon 
                             children='Meeting ID'  
@@ -57,6 +58,7 @@ const MeetingDetailsScreen = ({
                           <Input 
                             placeholder='Enter meeting ID here..' 
                             onChange={(e) => {setMeetingId(e.target.value);}}
+                            color="white"
                           />
                           <InputRightAddon
                             bg={"brand.100"}
