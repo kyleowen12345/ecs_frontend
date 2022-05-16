@@ -39,7 +39,9 @@ const useProvideVideoCall = () =>{
 
     //  To view paticipant conditional
     const [participantViewVisible, setParticipantViewVisible] = useState(true);
-  
+     
+    // Request participant status
+    const [participantRequestAccepted, setParticipantRequestAccepted] = useState(false)
 
     const myCookie = Cookies.get('validation')
 
@@ -60,6 +62,8 @@ const useProvideVideoCall = () =>{
         return strTime;
       }
 
+      
+     
     useEffect(() => {
        if(myCookie){
         return setToken(myCookie)
@@ -97,6 +101,8 @@ const useProvideVideoCall = () =>{
         setEntryRequest,
         participantViewVisible,
         setParticipantViewVisible,
+        participantRequestAccepted,
+        setParticipantRequestAccepted,
         chunk,
         formatAMPM, 
         myCookie

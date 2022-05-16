@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate   } from "react-router-dom";
 import { useMeeting,useParticipant } from "@videosdk.live/react-sdk";
-import {useMediaQuery ,useDisclosure,Box, Icon   } from '@chakra-ui/react'
+import {useMediaQuery ,useDisclosure,Box, Icon,useToast   } from '@chakra-ui/react'
 import { BsChevronDoubleDown,BsChevronDoubleUp } from 'react-icons/bs';
 import { useVideoCall } from '../../../lib/callContext';
 import Cookies from 'js-cookie'
@@ -14,6 +14,7 @@ import SmallScreenMenu from './bottommenusections/SmallScreenMenu';
 const BottomMenu = () => {
   const navigate = useNavigate();
   const {token} = useVideoCall()
+  const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const boxRef = React.useRef()
   const [isLargerThan768] = useMediaQuery('(min-width: 768px)')
@@ -88,6 +89,13 @@ const decoded = jwt_decode(token ? token : Cookies.get('validation'))
 const endMeeting = () => {
      end()
      navigate('/')
+     toast({  
+      status: 'info',
+      isClosable: true,
+      position:"top-right",
+      description:`The meeting ended`
+    })
+
 }
 const leaveMeeting = () => {
      leave()

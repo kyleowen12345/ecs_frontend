@@ -10,10 +10,16 @@ import { useVideoCall } from "../../lib/callContext";
 import BottomMenu from "./menu/BottomMenu";
 import Cookies from 'js-cookie'
 import jwt_decode from "jwt-decode";
-import {  Box, Text,Icon,Badge, Button,useToast   } from '@chakra-ui/react'
+import {  Box, Text,Icon,Badge, Button,useToast,useDisclosure,AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,   } from '@chakra-ui/react'
 import Pagination from "./Pagination";
 import Navbar from "../header/Navbar";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+import RequestEntryDialog from "./RequestEntryDialog";
 // import {
 //   useParams,
 //   useLocation,
@@ -25,6 +31,10 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
         const {meetingID} = useParams()
         const toast = useToast()
+        const { isOpen, onOpen, onClose } = useDisclosure()
+        const cancelRef = React.useRef()
+       
+        const [requestingParticipantAccepted,setRequestingParticipantAccepted] = useState(false)
         // const [searchParams, setSearchParams] = useSearchParams();
         let location = useLocation();
         const {
@@ -35,7 +45,9 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
           setEntryRequest,
           participantViewVisible,
           setParticipantViewVisible,
-          myCookie
+          myCookie,
+          participantRequestAccepted,
+          setParticipantRequestAccepted,
         } = useVideoCall()
         const navigate = useNavigate();
         console.log(meetingID)
@@ -44,10 +56,23 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
        
       
         function onParticipantJoined(participant) {
-          console.log(" onParticipantJoined", participant);
+          toast({
+           
+            status: 'info',
+            isClosable: true,
+            position:"top-right",
+            description:`${participant?.displayName} - joined the meeting`
+          })
         }
         function onParticipantLeft(participant) {
           console.log(" onParticipantLeft", participant);
+          toast({
+           
+            status: 'info',
+            isClosable: true,
+            position:"top-right",
+            description:`${participant?.displayName} - left the meeting`
+          })
         }
         const onSpeakerChanged = (activeSpeakerId) => {
           console.log(" onSpeakerChanged", activeSpeakerId);
@@ -58,17 +83,23 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
         function onMainParticipantChanged(participant) {
           console.log(" onMainParticipantChanged", participant);
         }
+       
+        
         function onEntryRequested({participantId, name,allow,deny}) {
           
           // console.log(" onEntryRequested x", participantId);
           // console.log(name)
+          // setEntryRequest(participantId)
+          // onOpen()
+          
+          // participantRequestAccepted === true ? allow(): deny()
           setEntryRequest(participantId)
          const userperm= prompt(`do you want ${name} to join`,'yes')
 
           
          userperm == "yes" ? allow():deny()
-        
-        //  setEntryRequestLoading(false)
+         
+          
         }
         
         function onRecordingStarted() {
@@ -103,6 +134,8 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
       
         const onWebcamRequested = (data) => {
           console.log("onWebcamRequested", data);
+          const {accept} = data
+          accept()
         };
         const onMicRequested = (data) => {
           console.log("onMicRequested", data);
@@ -295,89 +328,6 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
             justifyContent={"center"}
             color="white"
           >
-            {/* <div style={{ height: tollbarHeight }}>
-              
-              <button className={"button red"} onClick={getOut}>
-                LEAVE
-              </button>
-              <button className={"button blue"} onClick={handleJoinConference}>
-                join
-              </button>
-              <button className={"button blue"} onClick={()=>end()}>
-                end
-              </button>
-              <button className={"button blue"} onClick={()=>muteMic()}>
-                Mute mic
-              </button>
-              <button className={"button blue"} onClick={toggleMic}>
-                toggleMic
-              </button>
-              <button className={"button blue"} onClick={toggleWebcam}>
-                toggleWebcam
-              </button>
-              <button className={"button blue"} onClick={toggleScreenShare}>
-                toggleScreenShare
-              </button>
-              <button className={"button blue"} onClick={handlestartVideo}>
-                startVideo
-              </button>
-              <button className={"button blue"} onClick={handlestopVideo}>
-                stopVideo
-              </button>
-              <button className={"button blue"} onClick={handleresumeVideo}>
-                resumeVideo
-              </button>
-              <button className={"button blue"} onClick={handlepauseVideo}>
-                pauseVideo
-              </button>
-              <button className={"button blue"} onClick={handlesseekVideo}>
-                seekVideo
-              </button>
-              <button className={"button blue"} onClick={handleStartLiveStream}>
-                Start Live Stream
-              </button>
-              <button className={"button blue"} onClick={handleStopLiveStream}>
-                Stop Live Stream
-              </button>
-              <button className={"button blue"} onClick={handleStartRecording}>
-                start recording
-              </button>
-              <button className={"button blue"} onClick={handleStopRecording}>
-                stop recording
-              </button>
-              <button
-                className={"button blue"}
-                onClick={() => setParticipantViewVisible((s) => !s)}
-              >
-                Switch to {participantViewVisible ? "Connections" : "Participants"}{" "}
-                view
-              </button>
-      
-              <button
-                className={"button blue"}
-                onClick={async () => {
-                  const meetingId = prompt(
-                    `Please enter meeting id where you want Connect`
-                  );
-                  if (meetingId) {
-                    try {
-                      await connectTo({
-                        meetingId,
-                        payload: "This is Testing Payload",
-                      });
-                    } catch (e) {
-                      console.log("Connect to Error", e);
-                    }
-                  } else {
-                    alert("Empty meetingId!");
-                  }
-                }}
-              >
-                Make Connections
-              </button>
-            </div> */}
-            
-            {/* <Text>Meeting id is : {meetingId || meetingID}</Text> */}
             <Navbar/>
             {decoded?.permissions.includes('allow_join') && 
             <CopyToClipboard text={meetingId || meetingID}
@@ -388,7 +338,7 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
                 status: 'success',
                 duration: 3000,
                 isClosable: true,
-                position:"top"
+                position:"top-right",
               })
             }}
           >
@@ -461,6 +411,16 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
                   <Text  mt={5}>Meeting id is : {meetingId || meetingID}</Text>
               </Box>          
             }
+            {/* <RequestEntryDialog 
+                isOpen={isOpen} 
+                onOpen={onOpen} 
+                onClose={onClose} 
+                cancelRef={cancelRef} 
+                onEntryRequested={onEntryRequested}
+                // requestingParticipant={requestingParticipant}
+                // setRequestingParticipant={setRequestingParticipant}
+                // setRequestingParticipantStatus={setRequestingParticipantStatus}
+            /> */}
            {participants.size > 0 && <BottomMenu />}
           </Box>
        

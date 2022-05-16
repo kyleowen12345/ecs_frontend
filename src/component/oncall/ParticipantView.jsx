@@ -108,7 +108,7 @@ const ParticipantView = ({ participantId }) => {
       }, [screenShareStream, screenShareOn]);
   return (
     <Box
-     bg={micOn ? "#95C730":"brand.100" }
+     bg={isActiveSpeaker ? "#95C730":"brand.100" }
      borderRadius={8}
      overflow="hidden"
      margin={1}
@@ -128,8 +128,8 @@ const ParticipantView = ({ participantId }) => {
         borderRadius={8}
         overflow="hidden"
         width={"100%"}
-        minH={["200px","200px","200px","300px"]}
-        maxH={"300px"}
+        minH={["200px","200px","250px","350px","400px"]}
+        maxH={"400px"}
       >
         <Box
            height={"100%"}
