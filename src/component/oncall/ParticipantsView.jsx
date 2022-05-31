@@ -14,7 +14,7 @@ import { Grid,Box } from '@chakra-ui/react'
 const ParticipantsView = () => {
   const { participants } = useMeeting();
   const {chunk} = useVideoCall()
-  console.log(participants.keys())
+  console.log(participants)
   return (
     <div
     style={{

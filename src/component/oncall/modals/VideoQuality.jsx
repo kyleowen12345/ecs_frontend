@@ -75,6 +75,8 @@ const VideoQuality = () => {
   });
   const videoQualityList = ['low','med','high']
 
+  
+
   return (
     <>
       <MenuIcons  icon={MdHighQuality} label={"Video Quality"} method={onOpen}   />

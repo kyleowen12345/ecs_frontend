@@ -9,6 +9,8 @@ import VideoQuality from '../../modals/VideoQuality';
 import FirstMenuSection from './FirstMenuSection';
 import ThirdMenuSection from './ThirdMenuSection';
 import MenuIcons from '../MenuIcons';
+import SwitchCamera from '../../modals/SwitchCamera';
+
 
 const SmallScreenMenu = ({
     micOn,
@@ -24,6 +26,7 @@ const SmallScreenMenu = ({
     handleStopRecording,
     handleStartRecording
 }) => {
+  
   return (
     <Box
        bg={"#1B1B1B"}
@@ -63,9 +66,13 @@ const SmallScreenMenu = ({
             
             <Messages/>
            
-            <MenuIcons  icon={isRecording ? AiFillStop: BsFillRecordCircleFill} label={isRecording ? "Stop Recording":"Record"} method={isRecording?handleStopRecording: handleStartRecording}/>
+            {
+               decoded?.permissions.includes('allow_join') &&
+               <MenuIcons  icon={isRecording ? AiFillStop: BsFillRecordCircleFill} label={isRecording ? "Stop Recording":"Record"} method={isRecording?handleStopRecording: handleStartRecording}/>
+            }
+            
            
-            <VideoQuality/>
+            <SwitchCamera/>
 
             <MenuIcons  icon={BsUiChecksGrid} label={"Layout" }/>
       </Grid>

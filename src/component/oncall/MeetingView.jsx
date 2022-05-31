@@ -20,6 +20,7 @@ import Pagination from "./Pagination";
 import Navbar from "../header/Navbar";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import RequestEntryDialog from "./RequestEntryDialog";
+import Askjoin from "./modals/Askjoin";
 // import {
 //   useParams,
 //   useLocation,
@@ -93,12 +94,12 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
           // onOpen()
           
           // participantRequestAccepted === true ? allow(): deny()
+         
           setEntryRequest(participantId)
-         const userperm= prompt(`do you want ${name} to join`,'yes')
+         const userperm= window.confirm(`do you want ${name} to join`)
 
           
-         userperm == "yes" ? allow():deny()
-         
+         userperm == true ? allow():deny()
           
         }
         
@@ -111,11 +112,13 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
         function onChatMessage(data) {
           console.log(" onChatMessage", data);
         }
-        function onMeetingJoined() {
+        function onMeetingJoined({}) {
           console.log("onMeetingJoined");
         }
         function onMeetingLeft() {
           console.log("onMeetingLeft");
+          navigate('/')
+        
           onMeetingLeave();
         }
         const onLiveStreamStarted = (data) => {
@@ -243,7 +246,7 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
           onSwitchMeeting,
           onConnectionOpen,
         });
-        console.log(entryRequest)
+        console.log(mainParticipant)
         function onEntryResponded(participantId, name) {
           console.log(" onEntryResponded", participantId, name);
           console.log(participants)
@@ -295,7 +298,7 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
             const valid = await validateMeeting({meetingId:meetingID,token:token? token:  myCookie})
             console.log(valid)
              if(valid){
-              
+             
                 join()
                 setEntryRequestLoading(false)
              }else{
@@ -319,8 +322,7 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
          
         }
         const decoded = jwt_decode(token ? token : Cookies.get('validation'))
-        const tollbarHeight = 120;
-        console.log(participants.size === 0 )
+       
         return (
           <Box
             display={"flex"}
@@ -387,6 +389,7 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
               
               
             </Box>
+            <Askjoin isOpen={isOpen} onOpen={onOpen} onClose={onClose} cancelRef={cancelRef}/>
             { participants.size === 0 && !decoded?.permissions.includes('allow_join') && 
               <Box
                 width={"100%"}
@@ -397,7 +400,7 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
                 alignItems="center"
                 mt={10}
               >
-                 
+                
                   <Button
                       w={"300px"}
                       bg={"brand.100"}
@@ -421,6 +424,9 @@ const MeetingView = ({ onNewMeetingIdToken, onMeetingLeave }) => {
                 // setRequestingParticipant={setRequestingParticipant}
                 // setRequestingParticipantStatus={setRequestingParticipantStatus}
             /> */}
+            {/* <Button
+            onClick={onPress}
+            >Get cams</Button> */}
            {participants.size > 0 && <BottomMenu />}
           </Box>
        
