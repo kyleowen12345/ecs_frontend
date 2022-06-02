@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate   } from "react-router-dom";
-import {InputGroup, Input, InputLeftAddon, InputRightAddon,  Box, Button,Grid, GridItem, Text,Tooltip,Image,Icon,VStack   } from '@chakra-ui/react'
-import { createMeeting, getToken, validateMeeting } from "../../lib/api";
-import MeetingDetailsScreen from "./MeetingDetailsScreen";
+import {InputGroup, Input, InputLeftAddon, InputRightAddon,  Box, Button,Tooltip,Image,Icon,VStack   } from '@chakra-ui/react'
 import { useVideoCall } from "../../lib/callContext";
 import Cookies from 'js-cookie'
+import jwt_decode from "jwt-decode";
 import { BsFillMicFill,BsFillMicMuteFill,BsCameraVideoFill,BsCameraVideoOffFill } from 'react-icons/bs';
 import {IoMdArrowRoundBack} from 'react-icons/io'
 import nocam from '../../assets/images/nocam.png'
@@ -23,7 +22,7 @@ const JoiningScreen = ({ onClickStartMeeting}) => {
           webcamOn, 
           setWebcamOn, 
           setMeetingStarted,
-          readyToJoin,
+          setEntryRequest
         } = useVideoCall()
   const videoPlayerRef = useRef();
   const [videoTrack, setVideoTrack] = useState(null);
@@ -88,7 +87,7 @@ const submitParticipantName = (name) => {
    Cookies.set('perps',name)
 }
 
-console.log(token)
+const decoded = jwt_decode(token ? token : Cookies.get('validation'))
    
   return (
      <VStack
@@ -248,7 +247,9 @@ console.log(token)
                             setVideoTrack(null);
                           }
                           setMeetingStarted(true)
-                          navigate(`/meeting/${meetingId}/1`)
+                          navigate(`/meeting/${meetingId}`)
+                         
+                          
                         }}
                         id={"btnJoin"}>
                       Start

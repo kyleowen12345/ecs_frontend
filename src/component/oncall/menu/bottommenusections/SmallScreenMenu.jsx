@@ -74,7 +74,7 @@ const SmallScreenMenu = ({
            
             <SwitchCamera/>
 
-            <MenuIcons  icon={BsUiChecksGrid} label={"Layout" }/>
+           
       </Grid>
      </Box>
   )

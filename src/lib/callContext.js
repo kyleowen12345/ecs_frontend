@@ -35,11 +35,14 @@ const useProvideVideoCall = () =>{
 
     // User Entry Permission
     const [entryRequestLoading,setEntryRequestLoading] = useState(false)
-    const [entryRequest,setEntryRequest] = useState("")
+  
 
     //  To view paticipant conditional
     const [participantViewVisible, setParticipantViewVisible] = useState(true);
      
+    // Request for non-host
+    const [entryRequest,setEntryRequest] = useState(false)
+    
     // Request participant status
     const [participantRequestAccepted, setParticipantRequestAccepted] = useState(false)
 
@@ -70,7 +73,7 @@ const useProvideVideoCall = () =>{
        } 
     }, [myCookie])
 
-    console.log(token)
+
       
 
 

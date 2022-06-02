@@ -118,8 +118,6 @@ const ParticipantView = ({ participantId }) => {
      flexDirection={"column"}
      position="relative"
      maxW={"450px"}
-    //  border={"1px solid"}
-    //  borderColor={"brand.100"}
     >
       <audio ref={micRef} autoPlay muted={isLocal} />
 
@@ -128,7 +126,7 @@ const ParticipantView = ({ participantId }) => {
         borderRadius={8}
         overflow="hidden"
         width={"100%"}
-        minH={["200px","200px","250px","350px","400px"]}
+        minH={["250px","250px","250px","350px","400px"]}
         maxH={"400px"}
       >
         <Box

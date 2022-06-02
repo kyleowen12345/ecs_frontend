@@ -37,9 +37,9 @@ const Home = () => {
         setMicOn(true);
         navigate('/join-meeting')
         setJoinMeetingLoad(false)
+
       } else alert("Invalid Meeting Id");
     } catch (error) {
-      console.log(error)
       toast({
         title: 'Meeting ID is incorrect',
         description: "Please make sure the meetingId is correct.",
